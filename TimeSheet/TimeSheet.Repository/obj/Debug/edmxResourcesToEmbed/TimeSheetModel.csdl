@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TimeSheetDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="TimeSheetEntries" Relationship="TimeSheetDatabaseModel.FK_TimeSheetEntry_Category" FromRole="Category" ToRole="TimeSheetEntry" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ZipCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CountryId" Type="Int32" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_Client_Country" FromRole="Client" ToRole="Country" />
+    <NavigationProperty Name="Projects" Relationship="Self.FK_Project_Client" FromRole="Client" ToRole="Project" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Clients" Relationship="Self.FK_Client_Country" FromRole="Country" ToRole="Client" />
+  </EntityType>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <Property Name="TeamLeaderId" Type="Int32" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Client" Relationship="Self.FK_Project_Client" FromRole="Project" ToRole="Client" />
+    <NavigationProperty Name="TeamMember" Relationship="Self.FK_Project_TeamMember" FromRole="Project" ToRole="TeamMember" />
+    <NavigationProperty Name="Works" Relationship="Self.FK_ProjectId" FromRole="Project" ToRole="Works" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="TeamMembers" Relationship="Self.FK_TeamMember_Role" FromRole="Role" ToRole="TeamMember" />
+  </EntityType>
+  <EntityType Name="TeamMember">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Projects" Relationship="Self.FK_Project_TeamMember" FromRole="TeamMember" ToRole="Project" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_TeamMember_Role" FromRole="TeamMember" ToRole="Role" />
+    <NavigationProperty Name="Works" Relationship="Self.FK_TeamMemberId" FromRole="TeamMember" ToRole="Works" />
+  </EntityType>
+  <EntityType Name="Work">
+    <Key>
+      <PropertyRef Name="TeamMemberId" />
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="TeamMemberId" Type="Int32" Nullable="false" />
+    <Property Name="ProjectId" Type="Int32" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Project" Relationship="Self.FK_ProjectId" FromRole="Works" ToRole="Project" />
+    <NavigationProperty Name="TeamMember" Relationship="Self.FK_TeamMemberId" FromRole="Works" ToRole="TeamMember" />
+    <NavigationProperty Name="TimeSheetEntries" Relationship="TimeSheetDatabaseModel.FK_TimeSheetEntry_Works" FromRole="Work" ToRole="TimeSheetEntry" />
+  </EntityType>
+  <Association Name="FK_Client_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="Client" Type="Self.Client" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Project_Client">
+    <End Role="Client" Type="Self.Client" Multiplicity="1" />
+    <End Role="Project" Type="Self.Project" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Project">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Project_TeamMember">
+    <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="0..1" />
+    <End Role="Project" Type="Self.Project" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TeamMember">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Project">
+        <PropertyRef Name="TeamLeaderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProjectId">
+    <End Role="Project" Type="Self.Project" Multiplicity="1" />
+    <End Role="Works" Type="Self.Work" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Works">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TeamMember_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TeamMember">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TeamMemberId">
+    <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="1" />
+    <End Role="Works" Type="Self.Work" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TeamMember">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Works">
+        <PropertyRef Name="TeamMemberId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TimeSheetDatabaseEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Categories" EntityType="Self.Category" />
+    <EntitySet Name="Clients" EntityType="Self.Client" />
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Projects" EntityType="Self.Project" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="TeamMembers" EntityType="Self.TeamMember" />
+    <EntitySet Name="Works" EntityType="Self.Work" />
+    <AssociationSet Name="FK_Client_Country" Association="Self.FK_Client_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="Client" EntitySet="Clients" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Project_Client" Association="Self.FK_Project_Client">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Project" EntitySet="Projects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Project_TeamMember" Association="Self.FK_Project_TeamMember">
+      <End Role="TeamMember" EntitySet="TeamMembers" />
+      <End Role="Project" EntitySet="Projects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProjectId" Association="Self.FK_ProjectId">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="Works" EntitySet="Works" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TeamMember_Role" Association="Self.FK_TeamMember_Role">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="TeamMember" EntitySet="TeamMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TeamMemberId" Association="Self.FK_TeamMemberId">
+      <End Role="TeamMember" EntitySet="TeamMembers" />
+      <End Role="Works" EntitySet="Works" />
+    </AssociationSet>
+    <EntitySet Name="TimeSheetEntries" EntityType="TimeSheetDatabaseModel.TimeSheetEntry" />
+    <AssociationSet Name="FK_TimeSheetEntry_Category" Association="TimeSheetDatabaseModel.FK_TimeSheetEntry_Category">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="TimeSheetEntry" EntitySet="TimeSheetEntries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TimeSheetEntry_Works" Association="TimeSheetDatabaseModel.FK_TimeSheetEntry_Works">
+      <End Role="Work" EntitySet="Works" />
+      <End Role="TimeSheetEntry" EntitySet="TimeSheetEntries" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="TimeSheetEntry">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="CategoryId" Type="Int32" Nullable="false" />
+    <Property Name="ProjectId" Type="Int32" Nullable="false" />
+    <Property Name="TeamMemberId" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Overtime" Type="Int32" />
+    <Property Name="Time" Type="Double" Nullable="false" />
+    <NavigationProperty Name="Category" Relationship="TimeSheetDatabaseModel.FK_TimeSheetEntry_Category" FromRole="TimeSheetEntry" ToRole="Category" />
+    <NavigationProperty Name="Work" Relationship="TimeSheetDatabaseModel.FK_TimeSheetEntry_Works" FromRole="TimeSheetEntry" ToRole="Work" />
+  </EntityType>
+  <Association Name="FK_TimeSheetEntry_Category">
+    <End Type="TimeSheetDatabaseModel.Category" Role="Category" Multiplicity="1" />
+    <End Type="TimeSheetDatabaseModel.TimeSheetEntry" Role="TimeSheetEntry" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TimeSheetEntry">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TimeSheetEntry_Works">
+    <End Type="TimeSheetDatabaseModel.Work" Role="Work" Multiplicity="1" />
+    <End Type="TimeSheetDatabaseModel.TimeSheetEntry" Role="TimeSheetEntry" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Work">
+        <PropertyRef Name="ProjectId" />
+        <PropertyRef Name="TeamMemberId" />
+      </Principal>
+      <Dependent Role="TimeSheetEntry">
+        <PropertyRef Name="ProjectId" />
+        <PropertyRef Name="TeamMemberId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

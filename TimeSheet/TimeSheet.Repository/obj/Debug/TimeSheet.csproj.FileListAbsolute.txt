@@ -1,0 +1,12 @@
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\TimeSheet.exe.config
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\TimeSheet.exe
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\TimeSheet.pdb
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\EntityFramework.dll
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\EntityFramework.xml
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\obj\Debug\TimeSheet.csprojAssemblyReference.cache
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\obj\Debug\TimeSheet.csproj.CoreCompileInputs.cache
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\obj\Debug\TimeSheet.csproj.CopyComplete
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\obj\Debug\TimeSheet.exe
+C:\Users\praktikant-pc\source\repos\TimeSheet\TimeSheet\obj\Debug\TimeSheet.pdb
